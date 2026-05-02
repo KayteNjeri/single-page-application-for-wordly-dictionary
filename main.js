@@ -8,6 +8,8 @@ const wordPhonetic = document.getElementById("phonetic");
 const wordDefinition = document.getElementById("definition");
 const wordAudio = document.getElementById("audio");
 const wordSynonym = document.getElementById("synonyms");
+const wordSource = document.getElementById("sourceUrl");
+const wordError = document.getElementById("error");
 
 const saveButton = document.getElementById("saveButton");
 //create element for favorites
@@ -21,9 +23,12 @@ async function searchWords(word) {
     try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
 
-        if (!response.ok) throw new Error("Word not found");
-
+        //if (!response.ok) throw new Error("Word not found");
         const data = await response.json();
+        console.log("API:", data);
+
+        if(!Array.isArray(data)) return null;
+        
         return data[0];
 
     } catch (error) {
@@ -32,21 +37,38 @@ async function searchWords(word) {
     }
 }
 
-//display data - output container
+//display data/word and its meanings, examples, audio and sourceurl
 function displayWord(data) {
-   if(!data) { 
     output.classList.remove("hidden");
+    if(!data) { 
     //output.innerHTML = "<p>The word has not been found.</p>";
-    return;
+        wordError.textContent = "The word has not been found. Try another word.";
+        output.classList.add("hidden");
+
+        wordOutput.textContent = "";
+        wordPhonetic.textContent = "";
+        wordDefinition.innerHTML = "";
+        wordSynonym.innerHTML = "";
+        wordAudio.innerHTML = "";
+        wordSource.innerHTML = "";
+        return;
    }
 
+   wordError.textContent = "";
+
    currentWord = data.word;  
+
+    wordDefinition.innerHTML = "";
+    wordSynonym.innerHTML = "";
+    wordAudio.innerHTML = "";
+    wordSource.innerHTML = "";
 
    wordOutput.textContent = data.word;
    //phonetic
    wordPhonetic.textContent = data.phonetic || "No pronunciation available";
    //definition
    wordDefinition.innerHTML = "<h3>Meanings</h3>"
+
         const meanings = data.meanings || [];
         meanings.forEach(meaning => {
             const block = document.createElement("div");
@@ -59,12 +81,11 @@ function displayWord(data) {
         const definitions = meaning.definitions || [];
 
             definitions.forEach(def => {
-                const defItem = document.createElement("p");
+            const defItem = document.createElement("p");
             defItem.innerHTML = `
-            <strong>Definition:</strong> ${def.definition || ""}
-             ${def.example ? `<br><em>Example: ${def.example}</em>` : ""}
-         `;
-
+                <strong>Definition:</strong> ${def.definition || ""}
+                ${def.example ? `<br><em>Example: ${def.example}</em>` : ""}
+            `;
          block.append(defItem);
       });
       wordDefinition.append(block);
@@ -81,7 +102,7 @@ function displayWord(data) {
             const span = document.createElement("span");
             span.textContent = s;
             span.className = "synonym";
-            wordSynonym.appendChild(span);
+            wordSynonym.append(span);
         });
     } else {
         wordSynonym.innerHTML += "<p>Synonyms not available</p>";
@@ -93,7 +114,7 @@ function displayWord(data) {
 
    if(audioURL) {
     const btn = document.createElement("button");
-    btn.textContent = "Play";
+    btn.textContent = "🔊Play the Pronunciation";
     
     btn.addEventListener("click", () => {
         new Audio(audioURL).play();
@@ -102,6 +123,15 @@ function displayWord(data) {
     wordAudio.append(btn);
     }
 
+    //source urls
+    const sourceURL = data.sourceUrls?.[0];
+
+    if(sourceURL) {
+        wordSource.innerHTML = `
+            <h3>SourceUrl</h3>
+            <a href="${sourceURL}" target="_blank">${sourceURL}</a>
+        `;
+    }
     output.classList.remove("hidden");
 }
 
@@ -116,6 +146,7 @@ function renderFavoriteWords(){
     favorites.forEach(word => {
         const term = document.createElement("li");
         term.className = "favorite-item";
+        
         term.innerHTML = `
         <span>${word}</span>
         <button class="remove-fav-button">✕</button>`;
@@ -142,11 +173,7 @@ searchForm.addEventListener("submit", async (event) => {
     event.preventDefault()
 
     const word = searchInput.value.trim();
-    if(!word) return ;
-
-    output.classList.remove("hidden");
-   // output.innerHTML = "<p>Loading the word...</p>";
-    
+    if(!word) return;
 
     await searchAndGiveOutput(word);
     

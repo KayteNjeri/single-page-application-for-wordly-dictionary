@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Wordly Dictionary</h1>
+        <h1>A Wordly Dictionary</h1>
     </header>
 
     <!-- MAIN CONTENT AREA -->
@@ -27,23 +27,35 @@
 
          <p id="error" class="error"></p>
          
-         <!-- Output -->
+         <!-- Results/Output -->
          <section id="output" class="hidden"> 
             <h2 id="word"></h2>
             <p id="phonetic"></p>
-            <div id="definition"></div>
-            <div id="audio"></div>
-            <div id="synonyms"></div>
+            <div id="definition">
+                <!-- definitions will appear here -->
+            </div>
 
+            <div id="audio">
+                <!-- audio button will appear here -->
+            </div>
+
+            <div id="synonyms">
+                <!-- synonyms will appear here -->
+            </div>
+            <div id="sourceUrl">
+                <!-- Source Url appears here -->    
+            </div>
          </section>
+
         <button id="saveButton" type="button">Save Word</button>
+
     </main>
 
     <!-- SIDEBAR: FAVORITE WORDS -->
     <aside class="sidebar">
-        <h2>Favorite Words</h2>
+        <h2>My Favorite Words</h2>
         <ul id="favoriteWords" class="favorites-list">
-            <!--DUMMY DATA-->
+            <!-- DUMMY DATA -->
             <li class="favorite-item">
                     <span>hello</span>
                     <button class="remove-fav-button" title="Remove">✕</button>
