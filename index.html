@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordly Dictionary</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Wordly Dictionary</h1>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content-container">
+        <!-- Search Section -->
+         <form id="search-form" class="search-form">
+            <input
+                type="text"
+                id="word-input"
+                class="search-input"
+                placeholder="Search for a word..."
+                required
+                />
+             <button type="submit"  class="btn-filled">Search</button> 
+         </form>
+
+         <p id="error" class="error"></p>
+         
+         <!-- Output -->
+         <section id="output" class="hidden"> 
+            <h2 id="word"></h2>
+            <p id="phonetic"></p>
+            <div id="definition"></div>
+            <div id="audio"></div>
+            <div id="synonyms"></div>
+
+         </section>
+        <button id="saveButton" type="button">Save Word</button>
+    </main>
+
+    <!-- SIDEBAR: FAVORITE WORDS -->
+    <aside class="sidebar">
+        <h2>Favorite Words</h2>
+        <ul id="favoriteWords" class="favorites-list">
+            <!--DUMMY DATA-->
+            <li class="favorite-item">
+                    <span>hello</span>
+                    <button class="remove-fav-button" title="Remove">✕</button>
+                </li>
+                
+        </ul>
+    </aside>
+
+     <script src="main.js"></script>
+
+</body>
+</html>
