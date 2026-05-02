@@ -30,7 +30,7 @@ You need a browser (Chrome, Mozilla, Edge) to run this application.
 1. Clone the repository:
 
    ```bash
-git clone https://github.com/KayteNjeri/single-page-application-for-wordly-dictionary
+   git clone https://github.com/KayteNjeri/single-page-application-for-wordly-dictionary
    ```
 
 2. Navigate to the project directory in the terminal:
@@ -39,7 +39,7 @@ git clone https://github.com/KayteNjeri/single-page-application-for-wordly-dicti
    cd single-page-application-for-wordly-dictionary
    ```
 
-3. Simply open the `index.html` file by in your browser. Consider having an extension of **Live Server** in VS Code in order to run the project over a local HTTP server.
+3. Simply open the `index.html` file by in your browser. *Consider having an extension of **Live Server** in VS Code in order to run the project over a local HTTP server.*
 
 ## Project Structure
 
