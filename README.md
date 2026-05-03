@@ -5,7 +5,10 @@ A Single Page Application is a responsive, front-end web application designed to
 ## Features
 
 - **Word Search:** Search for English words by inputting a word.
-- **Meanings:** Shows the word's definitions, it's pronunciation, how it is used (examples in sentences), it's synonyms (related words), provides an audio playback for pronunciation when available and also gives the sourceUrl for the definitions.
+- **Phonetics** Provides phonetics for the searched word, that is how the word is pronounced in both written form and an audio playback for same where it is available.
+- **Meanings:** Shows the part of speech, for instance, when the searched word is either a noun, verb, or interjection. It also gives the fetched word's definitions in each part of the speech and how it is used (examples in sentences).  
+- **Synonyms:** This lists synonyms available for the searched word.
+- **SourceUrl:** This gives the sourceUrl for the definitions.
 - **Favorite Words** Save favorite words for any future reference. The favorite words will be stored locally in the browser.
 - **Responsive Design** Built with modern CSS techniques including Grid and Flexbox, featuring a clean layout for a responsive and user-friendly interface.
 

@@ -1,7 +1,7 @@
-// Elements
+// DOM Elements
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("word-input");
-//create elements for output
+
 const output = document.getElementById("output");
 const wordOutput = document.getElementById("word");
 const wordPhonetic = document.getElementById("phonetic");
@@ -12,21 +12,19 @@ const wordSource = document.getElementById("sourceUrl");
 const wordError = document.getElementById("error");
 
 const saveButton = document.getElementById("saveButton");
-//create element for favorites
 const favoriteList = document.getElementById("favoriteWords");
 
+// Variables
 let currentWord="";
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-//Access API data
+//Search word from provided API
 async function searchWords(word) {
     try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
 
-        //if (!response.ok) throw new Error("Word not found");
         const data = await response.json();
-        console.log("API:", data);
-
+        //API returns null if the word when not found
         if(!Array.isArray(data)) return null;
         
         return data[0];
@@ -37,11 +35,13 @@ async function searchWords(word) {
     }
 }
 
-//display data/word and its meanings, examples, audio and sourceurl
+//Paint the DOM- display word, its meanings (definitions), examples, phonetics, audio and sourceurls
 function displayWord(data) {
+    //show the output container
     output.classList.remove("hidden");
+
+    //handle any invalid words
     if(!data) { 
-    //output.innerHTML = "<p>The word has not been found.</p>";
         wordError.textContent = "The word has not been found. Try another word.";
         output.classList.add("hidden");
 
@@ -54,31 +54,36 @@ function displayWord(data) {
         return;
    }
 
-   wordError.textContent = "";
+        wordError.textContent = "";
+        currentWord = data.word;  
 
-   currentWord = data.word;  
-
+    //reset sections before rendering a new word
     wordDefinition.innerHTML = "";
     wordSynonym.innerHTML = "";
     wordAudio.innerHTML = "";
     wordSource.innerHTML = "";
 
-   wordOutput.textContent = data.word;
-   //phonetic
-   wordPhonetic.textContent = data.phonetic || "No pronunciation available";
-   //definition
-   wordDefinition.innerHTML = "<h3>Meanings</h3>"
+    //gives the title of the word being searched
+    wordOutput.textContent = data.word;
 
+    //phonetics - gives the phonetics of the searched word
+    const phonetic = data.phonetics?.find(p => p.text)?.text;
+    wordPhonetic.textContent = phonetic || "No pronunciation available";
+
+    //definitions - gives the meanings of the searched word
+    wordDefinition.innerHTML = "<h3>Meanings</h3>"
         const meanings = data.meanings || [];
-        meanings.forEach(meaning => {
+            meanings.forEach(meaning => {
             const block = document.createElement("div");
             block.className = "meaning-block";
 
+            //Parts of the speech - either noun, verb or interjection
             const partOfSpeech = document.createElement("h4");
             partOfSpeech.textContent = meaning.partOfSpeech || "";
             block.append(partOfSpeech);
 
-        const definitions = meaning.definitions || [];
+            //Give definitions under parts of speech and Examples
+            const definitions = meaning.definitions || [];
 
             definitions.forEach(def => {
             const defItem = document.createElement("p");
@@ -91,7 +96,7 @@ function displayWord(data) {
       wordDefinition.append(block);
     });
 
-   //synonym
+   //Synonyms
    wordSynonym.innerHTML ="<h3>Synonyms</h3>";
    const synonyms = data.meanings
     .flatMap(m => m.definitions || [])
@@ -108,13 +113,13 @@ function displayWord(data) {
         wordSynonym.innerHTML += "<p>Synonyms not available</p>";
     }
     
-   //audio
+   //Word Audio Pronunciation
    wordAudio.innerHTML = "";
    const audioURL = data.phonetics?.find(p => p.audio)?.audio;
 
    if(audioURL) {
     const btn = document.createElement("button");
-    btn.textContent = "🔊Play the Pronunciation";
+    btn.textContent = "🔊 Play the Pronunciation";
     
     btn.addEventListener("click", () => {
         new Audio(audioURL).play();
@@ -123,26 +128,31 @@ function displayWord(data) {
     wordAudio.append(btn);
     }
 
-    //source urls
-    const sourceURL = data.sourceUrls?.[0];
+    //Source urls for the words
+    const sourceURL = data.sourceUrls;
 
-    if(sourceURL) {
+    if(sourceURL && sourceURL.length > 0) {
+        const links = sourceURL
+        .map(sourceURL => `<a href="${sourceURL}" target="_blank">${sourceURL}</a>`)
+        .join("<br>");
+
         wordSource.innerHTML = `
-            <h3>SourceUrl</h3>
-            <a href="${sourceURL}" target="_blank">${sourceURL}</a>
+            <h3>SourceUrls</h3>
+            ${links}
         `;
     }
     output.classList.remove("hidden");
 }
 
-//save favorite words
+// Save favorite words
 function renderFavoriteWords(){
     favoriteList.innerHTML = "";
-
+    //when favorite words have not been saved
     if (favorites.length === 0) {
         favoriteList.innerHTML = "<li>No favorite words yet!</li>";
         return;
     }
+    //when there are saved favorite words, to appear in list format
     favorites.forEach(word => {
         const term = document.createElement("li");
         term.className = "favorite-item";
@@ -151,8 +161,11 @@ function renderFavoriteWords(){
         <span>${word}</span>
         <button class="remove-fav-button">✕</button>`;
 
-        term.querySelector("span").onclick = () => searchAndGiveOutput(word);
+        //click word to search it again from the dictionary
+        term.querySelector("span").onclick = () => 
+            searchAndGiveOutput(word);
 
+        // how to remove the favorite words
         term.querySelector("button").onclick = () => {
             favorites = favorites.filter(w => w !== word);
             localStorage.setItem("favorites", JSON.stringify(favorites));
@@ -162,13 +175,14 @@ function renderFavoriteWords(){
     });
 }
 
+//Search and display the API data 
 async function searchAndGiveOutput(word) {
     const data = await searchWords(word);
     console.log("API DATA:", data);
     displayWord(data);
 }
 
-//submit the form
+// Submit the form
 searchForm.addEventListener("submit", async (event) => {
     event.preventDefault()
 
@@ -180,7 +194,7 @@ searchForm.addEventListener("submit", async (event) => {
     searchInput.value = "";
 });
 
-//add event listener to save favorites
+//Add event listener to save a seached word under my favorite words
 saveButton.addEventListener("click", () => {
     if (!currentWord) return;
 
@@ -191,4 +205,5 @@ saveButton.addEventListener("click", () => {
     }
 });
 
+// Initial
 renderFavoriteWords();
