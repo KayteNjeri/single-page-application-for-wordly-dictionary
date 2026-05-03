@@ -9,8 +9,7 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background: #ecf0f7;
     color: #222;
-    /*display: flex;*/
-    /*position: relative;*/
+    position: relative;
     min-height: 100vh;
 }
 
@@ -27,21 +26,12 @@ header {
     z-index: 10;
 }
 
-.layout {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-    padding-top: 80px;
-}
-
 .main-content-container {
     flex: 1;
     padding: 100px 30px 30px;
     max-width: 800px;
     margin: 0 auto;
     width: 100%;
-   /*margin-right: 280px;*/
 }
 
 .search-form {
@@ -195,17 +185,14 @@ header {
 }
 
 .sidebar {
-    width: 280px;
+    width: 230px;
     background: #fff;
     border-left: 1px solid #ddd;
-    /*padding: 100px 15px 20px;*/
     padding: 20px;
     position: fixed;
     right: 0;
-    /*top: 0;
     height: 100vh;
-    overflow-y: auto;*/
-    height: fit-content;
+    overflow-y: auto;
     top: 80px;
 }
 
@@ -253,7 +240,7 @@ header {
     }
 
     .sidebar {
-        position: relative;
+        position: sticky;
         width: 100%;
         height: auto;
         border-left: none;

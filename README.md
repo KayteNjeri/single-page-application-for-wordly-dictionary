@@ -61,5 +61,5 @@ This application uses the free Dictionary API.
 
 ## Licence
 
-This project is licenced under the ...........
+This project is licenced under the MIT License.
 
